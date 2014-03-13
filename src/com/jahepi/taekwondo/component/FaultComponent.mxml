@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="245" height="184">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:BitmapImage source="@Embed('assets/faults.png')" left="0" right="0" top="0" bottom="0" width="100%" height="100%" />
+	
+	<fx:Script>
+		<![CDATA[
+			import com.jahepi.taekwondo.event.FaultTaekwondoEvent;
+			
+			import spark.components.Image;
+			
+			[Embed(source="assets/keyshi.png")]
+			private var Keyshi:Class;
+			
+			[Embed(source="assets/gam.png")]
+			private var Gam:Class;
+			
+			private static var LIMIT:Number = 8;
+			
+			private var count:Number  = 0;
+			private var keyshiValue:Number  = 1;
+			private var gamValue:Number  = 2;
+			private var images:Array = new Array();
+			private var tempX:Number = -50;
+			private var tempY:Number = 4;
+			private var notifyPoint:Boolean = true;
+			private var faultCount:Number = 0;
+			
+			public function setKeyshi():void 
+			{
+				this.count += keyshiValue;
+				this.faultCount += keyshiValue;
+				if (this.count > LIMIT) {
+					this.count = LIMIT;
+				}		
+				this.updateComponent();
+			}
+			
+			public function setGam():void 
+			{
+				this.count += gamValue;
+				this.faultCount += gamValue;
+				if (this.count > LIMIT) {
+					this.count = LIMIT;
+				}
+				this.updateComponent();
+			}
+			
+			public function reset():void 
+			{
+				this.count = 0;
+				this.faultCount = 0;
+				this.notifyPoint = true;
+				this.updateComponent();
+			}
+			
+			private function updateComponent():void 
+			{
+				var x:Number = this.tempX;
+				var nGam:int = this.count / this.gamValue;
+				var nKeyshi:int = this.count % this.gamValue;
+				
+				// Notify add point enemy or lose match
+				if (this.count > 0 && this.notifyPoint) {
+					var isFault:int = this.faultCount / this.gamValue;
+					if (isFault == 1) {
+						faultCount = this.faultCount % this.gamValue;
+						this.dispatchEvent(new FaultTaekwondoEvent(FaultTaekwondoEvent.ON_ADD_POINT));
+					}
+					if (this.count == LIMIT) {
+						this.notifyPoint = false;
+						this.dispatchEvent(new FaultTaekwondoEvent(FaultTaekwondoEvent.ON_LOSE_BY_FAULT));
+					}
+				}
+				
+				for (var e:int = 0; e < images.length; e++) {
+					this.removeElement(images[e]);
+				}
+				
+				this.images = new Array();
+				
+				for (var i:int = 0; i < nGam; i++) {
+					var imageGam:Image = new Image();
+					imageGam.source = new Gam();
+					imageGam.width = 209;
+					imageGam.height = 157;
+					imageGam.y = this.tempY;
+					imageGam.x = x;
+					this.addElement(imageGam);
+					this.images.push(imageGam);
+					x += 45;
+				}
+				
+				if (nKeyshi > 0) {
+					var imageKeyshi:Image = new Image();
+					imageKeyshi.source = new Keyshi();
+					imageKeyshi.width = 209;
+					imageKeyshi.height = 157;
+					imageKeyshi.y = this.tempY;
+					imageKeyshi.x = x;
+					this.addElement(imageKeyshi);
+					this.images.push(imageKeyshi);
+				}
+			}
+			
+		]]>
+	</fx:Script>
+</s:Group>

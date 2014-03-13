@@ -1,0 +1,96 @@
+<config>
+
+	<variables>
+		
+		<!--  Variables de Sistema (No mover, solo en caso que sepas que hacen) -->
+		<variable name="version" desc="Version de la APP">2.0</variable>
+		<variable name="player1" desc="El color del jugador">rojo</variable>
+		<variable name="player2" desc="El color del jugador">azul</variable>
+		<variable name="tiempo_intervalo" desc="">300</variable>
+		<variable name="tiempo_limite" desc="">900</variable>
+		<variable name="total_rounds" desc="Numero de rounds">3</variable>
+		
+		<!-- Variables de tiempos de cronometro -->
+		<variable name="round_tiempo" desc="Duracion del round en segundos">90</variable>
+		<variable name="descanso_tiempo" desc="Duracion del descanso en segundos">30</variable>
+		<variable name="medico_tiempo" desc="Duracion del medico en segundos">60</variable>
+		<variable name="juez_tiempo" desc="Duracion del juez en segundos">3600</variable>
+		
+		<!-- Variables de acciones del teclado -->
+		<variable name="iniciar_round_tecla" desc="Tecla para iniciar el round">6</variable>
+		<variable name="resta_punto_jugador1_tecla" desc="Tecla para reducir puntos del jugador 1">8</variable>
+		<variable name="suma_punto_jugador1_tecla" desc="Tecla para sumar puntos del jugador 1">9</variable>
+		<variable name="resta_punto_jugador2_tecla" desc="Tecla para reducir puntos del jugador 2">8</variable>
+		<variable name="suma_punto_jugador2_tecla" desc="Tecla para sumar puntos del jugador 2">9</variable>
+		<variable name="reinicar_tecla" desc="Tecla para reiniciar">27</variable>
+		<variable name="medico_tecla" desc="Tecla Medico">N</variable>
+		<variable name="juez_tecla" desc="Tecla Juez">M</variable>
+		<variable name="cerrar_cronometro_tecla" desc="Tecla para cerrar tiempo de descanso, medico o juez">0</variable>
+		<variable name="keyshi_jugador1_tecla" desc="Tecla falta Keyshijugador 1">2</variable>
+		<variable name="gam_jugador1_tecla" desc="Tecla falta GAM jugador 1">3</variable>
+		<variable name="keyshi_jugador2_tecla" desc="Tecla falta Keyshijugador 2">4</variable>
+		<variable name="gam_jugador2_tecla" desc="Tecla falta GAM jugador 2">5</variable>
+		
+		<!-- Variables de diseño app -->
+		<variable name="wifi_icono_escala_css" desc="Tamaño en escala de los iconos wifi">.2</variable>
+		<variable name="color_tiempo1_css" desc="Color tiempo">#ffffff</variable>
+		<variable name="color_tiempo2_css" desc="Color tiempo por acabar ">#ffee7f</variable>
+		<variable name="color_tiempo3_css" desc="Color tiempo termina">#dd4400</variable>
+	</variables>
+	
+	<controllers>
+	
+		<controller name="Oscar">
+			<groups>
+				<group player="rojo">
+					<button key="Q" value="1"></button>
+					<button key="W" value="2"></button>
+					<button key="E" value="3"></button>
+					<button key="R" value="4"></button>
+				</group>
+				<group player="azul">
+					<button key="T" value="1"></button>
+					<button key="Y" value="2"></button>
+					<button key="U" value="3"></button>
+					<button key="I" value="4"></button>
+				</group>
+			</groups>
+		</controller>
+		
+		<controller name="Omar Cabrera">
+			<groups>
+				<group player="rojo">
+					<button key="O" value="1"></button>
+					<button key="P" value="2"></button>
+					<button key="A" value="3"></button>
+					<button key="S" value="4"></button>
+				</group>
+				<group player="azul">
+					<button key="D" value="1"></button>
+					<button key="F" value="2"></button>
+					<button key="G" value="3"></button>
+					<button key="H" value="4"></button>
+				</group>
+			</groups>
+		</controller>
+		
+		<controller name="Giz">
+			<groups>
+				<group player="rojo">
+					<button key="J" value="1"></button>
+					<button key="K" value="2"></button>
+					<button key="L" value="3"></button>
+					<button key="Ñ" value="4"></button>
+				</group>
+				<group player="azul">
+					<button key="Z" value="1"></button>
+					<button key="X" value="2"></button>
+					<button key="C" value="3"></button>
+					<button key="V" value="4"></button>
+				</group>
+			</groups>
+		</controller>
+		
+	</controllers>
+
+</config>

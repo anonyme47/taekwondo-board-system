@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="319" 
+		  height="305" 
+		  contentBackgroundAlpha="0.0"
+		  horizontalAlign="center" 
+		  verticalAlign="middle">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.jahepi.taekwondo.loaders.Config;
+			
+			[Embed(source="assets/round1.png")]
+			private var Round1:Class;
+			
+			[Embed(source="assets/round2.png")]
+			private var Round2:Class;
+			
+			[Embed(source="assets/round3.png")]
+			private var Round3:Class;
+			
+			[Embed(source="assets/gold_medal2.png")]
+			private var Gold:Class;
+			
+			private var currentRound:Number = 0;
+			private var totalRounds:Number = 0;
+			private var isGoldState:Boolean = false;
+			private var config:Config;
+			
+			public function setConfig(config:Config):void 
+			{
+				this.config = config;
+			}
+			
+			public function init():void
+			{
+				this.totalRounds = this.config.getVariable("total_rounds");
+				this.changeRound();
+			}
+			
+			public function changeRound():void
+			{
+				if (this.isGoldState) {
+					return;	
+				}
+				
+				this.currentRound++;
+				
+				if (this.currentRound == 1) {
+					this.roundImage.source = new Round1();
+				}
+				
+				if (this.currentRound == 2) {
+					this.roundImage.source = new Round2();
+				}
+				
+				if (this.currentRound == 3) {
+					this.roundImage.source = new Round3();
+				}
+				
+				if (this.currentRound == this.totalRounds) {
+					this.currentRound = this.totalRounds;
+				}
+				
+				this.roundAnimation.play([this.roundImage], true);
+			}
+			
+			public function setIsGoldState():void
+			{
+				this.roundImage.source = new Gold();
+				this.isGoldState = true;
+				this.roundAnimation.play([this.roundImage], true);
+			}
+			
+			public function isLastRound():Boolean
+			{
+				return this.currentRound == this.totalRounds;
+			}
+			
+			public function getIsGoldState():Boolean 
+			{
+				return this.isGoldState;	
+			}
+			
+			public function reset():void
+			{
+				this.currentRound = 0;
+				this.isGoldState = false;
+				this.changeRound();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:Elastic id="elasticEasing" />
+		<s:Animate id="roundAnimation" easer="{elasticEasing}" duration="2000">
+			<s:SimpleMotionPath property="scaleX" valueTo="1.3" valueFrom="1" />
+			<s:SimpleMotionPath property="scaleY" valueTo="1.3" valueFrom="1" />
+		</s:Animate>
+	</fx:Declarations>
+	
+	<s:Image id="roundImage" width="319" height="305" backgroundAlpha="0.0"/>
+</s:HGroup>

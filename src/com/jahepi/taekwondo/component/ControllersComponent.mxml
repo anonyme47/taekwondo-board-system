@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="400" height="58" 
+		  contentBackgroundAlpha="0.0"
+		  paddingLeft="30"
+		  paddingRight="30"
+		  y="30"
+		  verticalAlign="middle">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.jahepi.taekwondo.loaders.Config;
+			
+			import spark.components.Image;
+			import spark.layouts.HorizontalAlign;
+			
+			private var config:Config;
+			private var group:String;
+			private var wifis:Array = new Array();
+			
+			public function setGroup(group:String):void
+			{
+				this.group = group;
+			}
+			
+			public function setConfig(config:Config):void 
+			{
+				this.config = config;
+			}
+			
+			public function toLeft():void
+			{
+				this.horizontalAlign = HorizontalAlign.LEFT;
+				this.x = 0;
+				this.y = 0;
+			}
+			
+			public function toRight():void
+			{
+				horizontalAlign = HorizontalAlign.RIGHT;
+				this.x = this.stage.stageWidth - this.width;
+				this.y = 0;
+			}
+			
+			public function displayControllers():void 
+			{
+				var controllers:Array = this.config.getControllers();
+				for (var i:int = 0; i < controllers.length; i++) {
+					var wifi:WifiComponent = new WifiComponent();
+					wifi.setGroup(this.group);
+					wifi.setController(controllers[i]);
+					wifi.scaleX = this.config.getVariable("wifi_icono_escala_css");
+					wifi.scaleY = this.config.getVariable("wifi_icono_escala_css");
+					this.wifis.push(wifi);
+					this.addElement(wifi);
+				}
+			}
+			
+			public function isKeyOn(key:String):void 
+			{
+				for (var i:int = 0; i < this.wifis.length; i++) {
+					var wifi:WifiComponent = this.wifis[i];
+					wifi.isKeyOn(key);
+				}
+			}
+		]]>
+	</fx:Script>
+</s:HGroup>

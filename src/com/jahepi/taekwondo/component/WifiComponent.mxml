@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 width="319" 
+		 height="305"
+		 added="init(event)">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:BorderContainer x="0" y="0" width="100%" height="100%" id="wifiContainer"
+		backgroundImage="@Embed('assets/comprobadoroff.png')" borderVisible="false">
+		<s:Image id="wifi" width="100%" height="100%" />
+	</s:BorderContainer>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.jahepi.taekwondo.dto.Controller;
+			import com.jahepi.taekwondo.dto.ControllerButton;
+			
+			import mx.events.TweenEvent;
+			
+			[Embed(source="assets/comprobadoron.png")]
+			private var ControllerON:Class;
+			[Embed(source="assets/comprobadoroff.png")]
+			private var ControllerOFF:Class;
+			
+			private var controller:Controller;
+			private var group:String;
+			
+			public function init(e:Event):void
+			{
+				this.wifiFade.addEventListener(TweenEvent.TWEEN_END, this.onTweenEnd);
+			}
+			
+			public function setController(controller:Controller):void
+			{
+				this.controller = controller;
+			}
+			
+			public function setGroup(group:String):void
+			{
+				this.group = group;
+			}
+			
+			public function isKeyOn(key:String):void
+			{
+				 var button:ControllerButton = this.controller.getButtonByKey(key);
+				 if (button != null) {
+					 if (button.getGroup() == this.group) {
+					 	this.on();
+					 }
+				 }
+			}
+			
+			private function on():void 
+			{
+				this.wifi.source = new ControllerON();
+				this.wifiFade.play(null, true);
+			}
+			
+			private function off():void 
+			{
+				this.wifi.source = new ControllerOFF();
+			}
+			
+			private function onTweenEnd(e:TweenEvent):void
+			{
+				this.off();
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<mx:Fade alphaFrom="0" alphaTo="1" id="wifiFade" target="{wifi}" duration="400" />
+	</fx:Declarations>
+</s:Group>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 width="566" 
+		 height="214"
+		 creationComplete="init(event)"
+		 showEffect="{rotate}"
+		 hideEffect="{fade}">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Style>
+		@font-face {
+			src:url("assets/clock.ttf");
+			fontFamily: clockFont;
+			embedAsCFF: true;
+		}
+		
+		.clockFontStyle {
+			fontFamily: clockFont;
+		}
+	</fx:Style>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.jahepi.taekwondo.Chronometer;
+			import com.jahepi.taekwondo.event.ChronometerEvent;
+			import com.jahepi.taekwondo.loaders.Config;
+			
+			import mx.effects.easing.*;
+			
+			import spark.effects.Rotate;
+			
+			[Embed(source="assets/roundtimer.png")]
+			private var RoundBg:Class;
+			[Embed(source="assets/descansotimer.png")]
+			private var RestBg:Class;
+			[Embed(source="assets/medictimer.png")]
+			private var MedicBg:Class;
+			[Embed(source="assets/jueztimer.png")]
+			private var JudgeBg:Class;
+			
+			private var chronometer:Chronometer;
+			private var config:Config;
+			
+			private function init(e:Event):void 
+			{
+				this.chronometer = new Chronometer(0, Chronometer.BACKWARD_TYPE);
+				this.chronometer.addEventListener(ChronometerEvent.ON_SECOND, this.onUpdateChronometer);
+				this.chronometer.addEventListener(ChronometerEvent.ON_COMPLETE_TIME, this.onComplete);
+			}
+			
+			private function onComplete(e:ChronometerEvent):void 
+			{
+				this.dispatchEvent(e);	
+			}
+			
+			public function setConfig(config:Config):void 
+			{
+				this.config = config;
+			}
+			
+			public function setChronometer(type:String, seconds:int):void 
+			{
+				this.chronometer.setTypeAndSeconds(type, seconds);
+				this.time.text = this.chronometer.getTime();
+			}
+			
+			public function start():void
+			{
+				this.chronometer.start();
+			}
+			
+			public function pause():void
+			{
+				this.chronometer.pause();
+			}
+			
+			public function reset():void
+			{
+				this.chronometer.reset();
+			}
+			
+			public function isActived():Boolean
+			{
+				return this.chronometer.isActived();
+			}
+			
+			private function onUpdateChronometer(e:ChronometerEvent):void
+			{
+				this.time.text = this.chronometer.getTime();
+				
+				if (this.chronometer.getType() == Chronometer.BACKWARD_TYPE) {
+					if (chronometer.getSeconds() == 0) {
+						this.time.setStyle("color", this.config.getVariable("color_tiempo3_css"));
+					} else if (chronometer.getSeconds() > 0 && chronometer.getSeconds() <= 10) {
+						this.time.setStyle("color", this.config.getVariable("color_tiempo2_css"));
+					} else {
+						this.time.setStyle("color", this.config.getVariable("color_tiempo1_css"));
+					}
+				} else {
+					this.time.setStyle("color", this.config.getVariable("color_tiempo1_css"));
+				}
+			}
+			
+			public function getSeconds():int
+			{
+				return this.chronometer.getSeconds();
+			}
+			
+			public function show():void {
+				this.visible = true
+			}
+			
+			public function hide():void {
+				this.visible = false;
+			}
+			
+			public function black():void {
+				this.background.source = new RoundBg();
+			}
+			
+			public function green():void {
+				this.background.source = new RestBg();
+			}
+			
+			public function yellow():void {
+				this.background.source = new JudgeBg();
+			}
+			
+			public function red():void {
+				this.background.source = new MedicBg();
+			}
+		]]>
+	</fx:Script>
+	
+	<s:BitmapImage id="background" source="@Embed('assets/roundtimer.png')" left="0" right="0" top="0" bottom="0" width="100%" height="100%" />
+	<s:Label x="158" y="56" color="#FFFFFF" fontSize="110" text="00:00" styleName="clockFontStyle" id="time" />
+	
+	<fx:Declarations>
+
+		<mx:Fade id="fade" />
+		<mx:Rotate id="rotate"
+			angleFrom="-180"
+		 	angleTo="0"
+			easingFunction="Elastic.easeInOut"
+			duration="2000" />
+	</fx:Declarations>
+	
+</s:Group>
