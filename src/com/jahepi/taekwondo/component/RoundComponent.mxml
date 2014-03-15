@@ -15,16 +15,16 @@
 		<![CDATA[
 			import com.jahepi.taekwondo.loaders.Config;
 			
-			[Embed(source="assets/round1.png")]
+			[Embed(source="/../assets/round1.png")]
 			private var Round1:Class;
 			
-			[Embed(source="assets/round2.png")]
+			[Embed(source="/../assets/round2.png")]
 			private var Round2:Class;
 			
-			[Embed(source="assets/round3.png")]
+			[Embed(source="/../assets/round3.png")]
 			private var Round3:Class;
 			
-			[Embed(source="assets/gold_medal2.png")]
+			[Embed(source="/../assets/gold_medal2.png")]
 			private var Gold:Class;
 			
 			private var currentRound:Number = 0;

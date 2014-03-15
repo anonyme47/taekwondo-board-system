@@ -9,7 +9,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:BorderContainer x="0" y="0" width="100%" height="100%" id="wifiContainer"
-		backgroundImage="@Embed('assets/comprobadoroff.png')" borderVisible="false">
+		backgroundImage="@Embed('/../assets/comprobadoroff.png')" borderVisible="false">
 		<s:Image id="wifi" width="100%" height="100%" />
 	</s:BorderContainer>
 	
@@ -20,9 +20,9 @@
 			
 			import mx.events.TweenEvent;
 			
-			[Embed(source="assets/comprobadoron.png")]
+			[Embed(source="/../assets/comprobadoron.png")]
 			private var ControllerON:Class;
-			[Embed(source="assets/comprobadoroff.png")]
+			[Embed(source="/../assets/comprobadoroff.png")]
 			private var ControllerOFF:Class;
 			
 			private var controller:Controller;

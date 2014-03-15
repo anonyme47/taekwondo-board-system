@@ -5,7 +5,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:BitmapImage source="@Embed('assets/faults.png')" left="0" right="0" top="0" bottom="0" width="100%" height="100%" />
+	<s:BitmapImage source="@Embed('/../assets/faults.png')" left="0" right="0" top="0" bottom="0" width="100%" height="100%" />
 	
 	<fx:Script>
 		<![CDATA[
@@ -13,10 +13,10 @@
 			
 			import spark.components.Image;
 			
-			[Embed(source="assets/keyshi.png")]
+			[Embed(source="/../assets/keyshi.png")]
 			private var Keyshi:Class;
 			
-			[Embed(source="assets/gam.png")]
+			[Embed(source="/../assets/gam.png")]
 			private var Gam:Class;
 			
 			private static var LIMIT:Number = 8;
@@ -64,7 +64,7 @@
 				var nGam:int = this.count / this.gamValue;
 				var nKeyshi:int = this.count % this.gamValue;
 				
-				// Notify add point enemy or lose match
+				// Notify, add point to enemy or lose match
 				if (this.count > 0 && this.notifyPoint) {
 					var isFault:int = this.faultCount / this.gamValue;
 					if (isFault == 1) {

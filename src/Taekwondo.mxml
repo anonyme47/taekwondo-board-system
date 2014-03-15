@@ -10,310 +10,31 @@
 	<fx:Style source="Taekwondo.css"/>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<loaders:Config id="config" />
-		<mx:Fade alphaFrom="0" alphaTo="1" id="winnerFade" duration="400" repeatCount="10" />
-		<s:Power id="elasticEasingPoint" exponent="10" />
-		<s:Animate id="pointAnimation" easer="{elasticEasingPoint}" duration="1000">
-			<s:SimpleMotionPath property="scaleX" valueTo="1.2" valueFrom="1" />
-			<s:SimpleMotionPath property="scaleY" valueTo="1.2" valueFrom="1" />
-		</s:Animate>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
-			import com.jahepi.taekwondo.Chronometer;
-			import com.jahepi.taekwondo.ScoreManager;
-			import com.jahepi.taekwondo.Utils;
-			import com.jahepi.taekwondo.component.ControllersComponent;
-			import com.jahepi.taekwondo.dto.ControllerButton;
-			import com.jahepi.taekwondo.dto.ScorePoint;
-			import com.jahepi.taekwondo.event.ChronometerEvent;
 			import com.jahepi.taekwondo.event.ConfigLoaderEvent;
-			import com.jahepi.taekwondo.event.FaultTaekwondoEvent;
-			import com.jahepi.taekwondo.event.ScoreManagerEvent;
+			import com.jahepi.taekwondo.loaders.Config;
 			import com.jahepi.taekwondo.loaders.ConfigLoader;
 			
-			private var scoreManagerPlayer1:ScoreManager;
-			private var scoreManagerPlayer2:ScoreManager;
-			private var winnerActivated:Boolean = false;
+			private var config:Config;
 			
 			private function onInit(e:Event):void 
-			{			
+			{	
+				this.config = new Config();
 				var configLoader:ConfigLoader = new ConfigLoader(this.config);
 				configLoader.addEventListener(ConfigLoaderEvent.ON_CONFIG_LOAD_COMPLETE, this.onLoadConfig);
 				configLoader.load();
 			}
 			
-			private function onChoosePoint(e:ScoreManagerEvent):void 
-			{
-				if (e.getScoreType() == this.config.getVariable("player1")) {
-					if (e.getScoreValue() > 0) {
-						this.pointAnimation.play([this.score1Label], true);
-					}
-					this.score1Label.text = String(this.scoreManagerPlayer1.getTotal());
-				}
-				
-				if (e.getScoreType() == this.config.getVariable("player2")) {
-					if (e.getScoreValue() > 0) {
-						this.pointAnimation.play([this.score2Label], true);
-					}
-					this.score2Label.text = String(this.scoreManagerPlayer2.getTotal());
-				}
-				
-				if (this.roundComponent.getIsGoldState()) {
-					var totalPlayer1:Number = this.scoreManagerPlayer1.getTotal();
-					var totalPlayer2:Number = this.scoreManagerPlayer2.getTotal();
-					if (totalPlayer1 != totalPlayer2) {
-						this.chooseWinner(totalPlayer1, totalPlayer2);
-						this.roundChronometer.pause();
-					}
-				}
-			}
-			
-			private function onResetScore(e:ScoreManagerEvent):void 
-			{
-				this.score1Label.text = "0";
-				this.score2Label.text = "0";
-			}
-			
-			private function onKeyDown(e:KeyboardEvent):void 
-			{
-				var char:String = String.fromCharCode(e.charCode);
-				var button:ControllerButton = this.config.getButtonByKey(char);
-				
-				// Verify if pressed key is enter, ctrl, etc ...
-				if (Utils.isCharCommand(char)) {
-					char = e.charCode.toString();
-				}
-				
-				if (char == this.config.getVariable("reinicar_tecla")) {
-					this.reset();
-				}
-				
-				if (this.winnerActivated) {
-					return;
-				}
-				
-				if (button != null) {
-					
-					this.controllersLeft.isKeyOn(char);
-					this.controllersRight.isKeyOn(char);
-					
-					if (this.roundChronometer.isActived()) {
-						var point:ScorePoint = new ScorePoint(button.getControllerName(), Number(button.getValue()));
-						if (button.getGroup() == this.config.getVariable("player1")) {
-							this.scoreManagerPlayer1.addPoint(point);
-						}
-						if (button.getGroup() == this.config.getVariable("player2")) {
-							this.scoreManagerPlayer2.addPoint(point);
-						}
-					}
-				}
-				
-				if (char == this.config.getVariable("keyshi_jugador1_tecla")) {
-					this.fault1.setKeyshi();
-				}
-				
-				if (char == this.config.getVariable("gam_jugador1_tecla")) {
-					this.fault1.setGam();
-				}
-				
-				if (char == this.config.getVariable("keyshi_jugador2_tecla")) {
-					this.fault2.setKeyshi();
-				}
-				
-				if (char == this.config.getVariable("gam_jugador2_tecla")) {
-					this.fault2.setGam();
-				}
-				
-				if (char == this.config.getVariable("iniciar_round_tecla")) {
-					this.roundChronometer.start();
-				}
-				
-				if (char == this.config.getVariable("resta_punto_jugador1_tecla")) {
-					this.scoreManagerPlayer1.reduceTotal();
-				}
-				
-				if (char == this.config.getVariable("suma_punto_jugador1_tecla")) {
-					this.scoreManagerPlayer1.sumTotal();
-				}
-				
-				if (char == this.config.getVariable("resta_punto_jugador2_tecla")) {
-					this.scoreManagerPlayer2.reduceTotal();
-				}
-				
-				if (char == this.config.getVariable("suma_punto_jugador2_tecla")) {
-					this.scoreManagerPlayer2.sumTotal();
-				}
-				
-				if (char == this.config.getVariable("medico_tecla")) {
-					this.roundChronometer.pause();
-					this.breakChronometer.setChronometer(Chronometer.BACKWARD_TYPE, this.config.getVariable("medico_tiempo"));
-					this.breakChronometer.start();
-					this.breakChronometer.show();
-					this.breakChronometer.red();
-				}
-				
-				if (char == this.config.getVariable("juez_tecla")) {
-					this.roundChronometer.pause();
-					this.breakChronometer.setChronometer(Chronometer.NORMAL_TYPE, this.config.getVariable("juez_tiempo"));
-					this.breakChronometer.start();
-					this.breakChronometer.show();
-					this.breakChronometer.yellow();
-				}
-				
-				if (char == this.config.getVariable("cerrar_cronometro_tecla")) {
-					this.breakChronometer.pause();
-					this.breakChronometer.hide();
-					if (this.roundChronometer.getSeconds() == 0) {
-						this.roundComponent.changeRound();
-						this.roundChronometer.reset();
-					}
-				}
-			}
-			
-			private function reset():void 
-			{
-				this.roundChronometer.reset();
-				this.scoreManagerPlayer1.resetTotal();
-				this.scoreManagerPlayer2.resetTotal();
-				this.fault1.reset();
-				this.fault2.reset();
-				this.breakChronometer.pause();
-				this.breakChronometer.hide();
-				this.roundComponent.reset();
-				this.winnerActivated = false;
-			}
-			
 			private function onLoadConfig(e:Event):void 
 			{
-				this.stage.scaleMode = StageScaleMode.EXACT_FIT;
-				this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE
-				this.stage.align = StageAlign.TOP_LEFT;
-				ScoreManager.TIME_INTERVAL = this.config.getVariable("tiempo_intervalo");
-				ScoreManager.TIME_LIMIT = this.config.getVariable("tiempo_limite");
-				this.scoreManagerPlayer1 = new ScoreManager(this.config.getVariable("player1"));
-				this.scoreManagerPlayer2 = new ScoreManager(this.config.getVariable("player2"));
-				this.scoreManagerPlayer1.addEventListener(ScoreManagerEvent.ON_CHOOSE_POINT, this.onChoosePoint);
-				this.scoreManagerPlayer2.addEventListener(ScoreManagerEvent.ON_CHOOSE_POINT, this.onChoosePoint);
-				this.scoreManagerPlayer1.addEventListener(ScoreManagerEvent.ON_RESET_SCORE, this.onResetScore);
-				this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.onKeyDown);
-				this.breakChronometer.setConfig(this.config);
-				this.roundChronometer.setConfig(this.config);
-				this.roundComponent.setConfig(this.config);
-				this.roundComponent.init();
-				this.roundChronometer.setChronometer(Chronometer.BACKWARD_TYPE, this.config.getVariable("round_tiempo"));
-				this.roundChronometer.addEventListener(ChronometerEvent.ON_COMPLETE_TIME, this.onRoundComplete);
-				this.breakChronometer.addEventListener(ChronometerEvent.ON_COMPLETE_TIME, this.onBreakComplete);
-				this.fault1.addEventListener(FaultTaekwondoEvent.ON_ADD_POINT, this.onPlayer1Fault);
-				this.fault2.addEventListener(FaultTaekwondoEvent.ON_ADD_POINT, this.onPlayer2Fault);
-				this.fault1.addEventListener(FaultTaekwondoEvent.ON_LOSE_BY_FAULT, this.onLosePlayer1ByFault);
-				this.fault2.addEventListener(FaultTaekwondoEvent.ON_LOSE_BY_FAULT, this.onLosePlayer2ByFault);
-				
-				this.controllersLeft.setConfig(this.config);
-				this.controllersLeft.setGroup(this.config.getVariable("player1"));
-				this.controllersLeft.displayControllers();
-				this.controllersLeft.toLeft();
-				
-				this.controllersRight.setConfig(this.config);
-				this.controllersRight.setGroup(this.config.getVariable("player2"));
-				this.controllersRight.displayControllers();
-				this.controllersRight.toRight();
-			}
-			
-			private function onRoundComplete(e:Event):void
-			{
-				if (this.roundComponent.isLastRound()) {
-					var totalPlayer1:Number = this.scoreManagerPlayer1.getTotal();
-					var totalPlayer2:Number = this.scoreManagerPlayer2.getTotal();
-					if (totalPlayer1 != totalPlayer2) {
-						this.chooseWinner(totalPlayer1, totalPlayer2);
-					} else {
-						// Gold point
-						this.roundComponent.setIsGoldState();
-						this.startRestChronometer();
-					}
-				} else {
-					this.startRestChronometer();
-				}
-			}
-			
-			private function chooseWinner(totalPlayer1:Number, totalPlayer2:Number):void
-			{
-				this.winnerActivated = true;
-				if (totalPlayer1 > totalPlayer2) {
-					// Player 1 wins
-					this.winnerFade.play([this.score1Label], false);
-				} else if (totalPlayer1 < totalPlayer2) {
-					// Player 2 wins
-					this.winnerFade.play([this.score2Label], false);
-				}
-			}
-			
-			private function startRestChronometer():void 
-			{
-				this.breakChronometer.setChronometer(Chronometer.BACKWARD_TYPE, this.config.getVariable("descanso_tiempo"));
-				this.breakChronometer.start();
-				this.breakChronometer.show();
-				this.breakChronometer.green();
-			}
-			
-			private function onBreakComplete(e:Event):void
-			{
-				this.breakChronometer.pause();
-				this.breakChronometer.hide();
-				if (this.roundChronometer.getSeconds() == 0) {
-					this.roundComponent.changeRound();
-					this.roundChronometer.reset();
-				}
-			}
-			
-			private function onPlayer1Fault(e:FaultTaekwondoEvent):void
-			{
-				this.scoreManagerPlayer2.sumTotal();
-			}
-			
-			private function onPlayer2Fault(e:FaultTaekwondoEvent):void
-			{
-				this.scoreManagerPlayer1.sumTotal();
-			}
-			
-			private function onLosePlayer1ByFault(e:FaultTaekwondoEvent):void
-			{
-				// Player 2 wins
-				this.winnerActivated = true;
-				this.winnerFade.play([this.score2Label], false);
-				this.roundChronometer.pause();
-			}
-			
-			private function onLosePlayer2ByFault(e:FaultTaekwondoEvent):void
-			{
-				// Player 1 wins
-				this.winnerActivated = true;
-				this.winnerFade.play([this.score1Label], false);
-				this.roundChronometer.pause();
+				this.scoreBoard.init(this.config);
 			}
 		]]>
 	</fx:Script>
 	
-	<s:BorderContainer x="0" y="0" width="1024" height="768" backgroundColor="#000000" id="mainContainer"
-		backgroundImage="@Embed('assets/bg2.png')" borderVisible="false">
-		
-		<component:ControllersComponent id="controllersLeft" />
-		<component:ControllersComponent id="controllersRight" />
-		
-		<component:RoundComponent x="353" y="10" id="roundComponent" />
-		
-		<component:FaultComponent x="0" y="584" id="fault1" />
-		<component:FaultComponent x="779" y="584" id="fault2" />
-		
-		<s:Label id="score1Label" x="74" y="263" width="350" color="#FFFFFF" fontFamily="Arial"
-				 fontSize="300" fontWeight="normal" text="0" textAlign="center" />
-		<s:Label id="score2Label" x="599" y="263" width="350" color="#FFFFFF" fontFamily="Arial"
-				 fontSize="300" fontWeight="normal" text="0" textAlign="center" />
-		
-		<component:ChronometerComponent x="227" y="301" id="breakChronometer" visible="false" />
-		<component:ChronometerComponent x="229" y="518" id="roundChronometer" />
-		
-	</s:BorderContainer>
+	<component:ScoreBoardComponent id="scoreBoard" />
+	
 </s:WindowedApplication>

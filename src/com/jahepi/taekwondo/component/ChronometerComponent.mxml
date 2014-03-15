@@ -13,7 +13,7 @@
 	
 	<fx:Style>
 		@font-face {
-			src:url("assets/clock.ttf");
+			src:url("/../assets/clock.ttf");
 			fontFamily: clockFont;
 			embedAsCFF: true;
 		}
@@ -33,13 +33,13 @@
 			
 			import spark.effects.Rotate;
 			
-			[Embed(source="assets/roundtimer.png")]
+			[Embed(source="/../assets/roundtimer.png")]
 			private var RoundBg:Class;
-			[Embed(source="assets/descansotimer.png")]
+			[Embed(source="/../assets/descansotimer.png")]
 			private var RestBg:Class;
-			[Embed(source="assets/medictimer.png")]
+			[Embed(source="/../assets/medictimer.png")]
 			private var MedicBg:Class;
-			[Embed(source="assets/jueztimer.png")]
+			[Embed(source="/../assets/jueztimer.png")]
 			private var JudgeBg:Class;
 			
 			private var chronometer:Chronometer;
@@ -136,7 +136,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:BitmapImage id="background" source="@Embed('assets/roundtimer.png')" left="0" right="0" top="0" bottom="0" width="100%" height="100%" />
+	<s:BitmapImage id="background" source="@Embed('/../assets/roundtimer.png')" left="0" right="0" top="0" bottom="0" width="100%" height="100%" />
 	<s:Label x="158" y="56" color="#FFFFFF" fontSize="110" text="00:00" styleName="clockFontStyle" id="time" />
 	
 	<fx:Declarations>

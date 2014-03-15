@@ -55,7 +55,7 @@ package com.jahepi.taekwondo
 			var pointMaxCount:Number = 0;
 			var pointsTemp:Dictionary = new Dictionary();
 			
-			// Clasificar puntos por el numero de veces que fueron seleccionados
+			// Clasify points by the number of times they were selected
 			for (var i:int = 0; i < this.points.length; i++) {
 				var point:ScorePoint = this.points[i];
 				var value:Number = point.getValue();
@@ -65,7 +65,7 @@ package com.jahepi.taekwondo
 					pointsTemp[value] = 1;
 				}
 			}
-			// Ver que punto fue el que se seleccionó mas veces
+			// Which point was selected more times
 			for (var key:Object in pointsTemp) {
 				var pointCount:Number = pointsTemp[key];
 				if (pointCount > pointMaxCount) {
@@ -73,7 +73,7 @@ package com.jahepi.taekwondo
 					pointMaxCount = pointCount;
 				}
 			}
-			// Tomar en cuenta el punto si se seleccionó mas de una vez, en caso de que no, pasar a 0
+			// In case the point was not selected more than one time, set it to zero
 			if (pointMaxCount <= 1) {
 				pointValue = 0;
 			}
