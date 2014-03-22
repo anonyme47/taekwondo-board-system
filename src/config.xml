@@ -6,7 +6,7 @@
 		<variable name="version" desc="Version de la APP">2.0</variable>
 		<variable name="player1" desc="El color del jugador">rojo</variable>
 		<variable name="player2" desc="El color del jugador">azul</variable>
-		<variable name="tiempo_intervalo" desc="">300</variable>
+		<variable name="tiempo_intervalo" desc="">100</variable>
 		<variable name="tiempo_limite" desc="">900</variable>
 		<variable name="total_rounds" desc="Numero de rounds">3</variable>
 		
@@ -80,7 +80,7 @@
 					<button key="J" value="1"></button>
 					<button key="K" value="2"></button>
 					<button key="L" value="3"></button>
-					<button key="Ñ" value="4"></button>
+					<button key="B" value="4"></button>
 				</group>
 				<group player="azul">
 					<button key="Z" value="1"></button>

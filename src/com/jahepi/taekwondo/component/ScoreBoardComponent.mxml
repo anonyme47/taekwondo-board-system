@@ -36,6 +36,7 @@
 			private var scoreManagerPlayer1:ScoreManager;
 			private var scoreManagerPlayer2:ScoreManager;
 			private var winnerActivated:Boolean = false;
+			private var resetFaultsOnGoldState:Boolean = true;
 			private var config:Config;
 			
 			public function init(config:Config):void 
@@ -214,6 +215,7 @@
 				this.breakChronometer.hide();
 				this.roundComponent.reset();
 				this.winnerActivated = false;
+				this.resetFaultsOnGoldState = true;
 			}
 			
 			private function onRoundComplete(e:Event):void
@@ -224,9 +226,14 @@
 					if (totalPlayer1 != totalPlayer2) {
 						this.chooseWinner(totalPlayer1, totalPlayer2);
 					} else {
-						// Gold point
+						// Gold point rounds
 						this.roundComponent.setIsGoldState();
 						this.startRestChronometer();
+						if (this.resetFaultsOnGoldState) {
+							this.resetFaultsOnGoldState = false
+							this.fault1.reset();
+							this.fault2.reset();
+						}
 					}
 				} else {
 					this.startRestChronometer();

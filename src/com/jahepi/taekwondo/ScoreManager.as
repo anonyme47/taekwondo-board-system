@@ -12,7 +12,7 @@ package com.jahepi.taekwondo
 	public class ScoreManager extends EventDispatcher
 	{
 		
-		public static var TIME_INTERVAL:Number = 1000;
+		public static var TIME_INTERVAL:Number = 100;
 		public static var TIME_LIMIT:Number = 5000;
 		
 		private var type:String;
@@ -22,7 +22,7 @@ package com.jahepi.taekwondo
 		private var points:Array;
 		private var total:Number;
 		
-		public function ScoreManager(type:String, target:IEventDispatcher=null)
+		public function ScoreManager(type:String, target:IEventDispatcher = null)
 		{
 			super(target);
 			this.time = 0;
@@ -32,15 +32,14 @@ package com.jahepi.taekwondo
 			this.thread = new Timer(TIME_INTERVAL);
 			this.thread.addEventListener(TimerEvent.TIMER, onTimer);
 			this.thread.start();
-			
 			this.points = new Array();
 		}
 		
 		private function onTimer(e:TimerEvent):void 
 		{
 			if (this.startListening) {
-				if (this.time > TIME_LIMIT) {
-					this.choosePoint();
+				var point:Number = this.choosePoint();
+				if (point > 0 || this.time > TIME_LIMIT) {
 					this.startListening = false;
 					this.points = new Array();
 				}
@@ -49,7 +48,7 @@ package com.jahepi.taekwondo
 			}
 		}
 		
-		private function choosePoint():void 
+		private function choosePoint():Number 
 		{
 			var pointValue:Number = 0;
 			var pointMaxCount:Number = 0;
@@ -78,8 +77,12 @@ package com.jahepi.taekwondo
 				pointValue = 0;
 			}
 			
-			this.total += pointValue;
-			this.dispatchEvent(new ScoreManagerEvent(this.type, pointValue, ScoreManagerEvent.ON_CHOOSE_POINT));
+			if (pointValue > 0) { 
+				this.total += pointValue;
+				this.dispatchEvent(new ScoreManagerEvent(this.type, pointValue, ScoreManagerEvent.ON_CHOOSE_POINT));
+			}
+			
+			return pointValue;
 		}
 		
 		public function addPoint(point:ScorePoint):void
